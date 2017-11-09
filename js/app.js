@@ -8,12 +8,13 @@ var gLastRes = null;
 $(document).ready(init);
 
 function init() {
-    if(getStorageTree() !== null)  gQuestsTree = getStorageTree()
+    if (getStorageTree() !== null) gQuestsTree = getStorageTree()
     else {
         gQuestsTree = createQuest('Male?');
-    gQuestsTree.yes = createQuest('Gandhi');
-    gQuestsTree.no = createQuest('Rita');
+        gQuestsTree.yes = createQuest('Gandhi');
+        gQuestsTree.no = createQuest('Rita');
     }
+    console.log(gQuestsTree)
     gCurrQuest = gQuestsTree;
 }
 
@@ -22,7 +23,7 @@ function startGuessing() {
     renderQuest();
 }
 
-function renderQuest() {    
+function renderQuest() {
     $('.gameQuest').show();
     $('.gameQuest h2').text(gCurrQuest.txt);
 }
@@ -31,15 +32,13 @@ function userResponse(res) {
     // If this node has no children
     if (gCurrQuest.yes === null) {
         if (res === 'yes') {
-            alert('Yes, I knew it!');
-            // TODO: improve UX
+            $('.logo').addClass('animated shake');     
+            $('.gameQuest h2').text('I WON!')       
         } else {
-            // alert('I dont know...teach me!')
             $('.gameQuest').hide();
             $('.gameNewQuest').show();
         }
     } else {
-     //   gPrevQuest = gCurrQuest.txt;
         if (res === 'yes') {
             gPrevQuest = gCurrQuest
             gCurrQuest = gCurrQuest.yes;
@@ -55,15 +54,13 @@ function userResponse(res) {
 }
 
 function addGuess() {
-    // TODO: create 2 new Quests based on the inputs' values
     var $newquest = createQuest($('#newQuest').val());
     var $guess = createQuest($('#newGuess').val());
-    $newquest.no = gPrevQuest.yes;    
-    console.log($newquest,'new quest')
+    $newquest.no = gPrevQuest.yes;
+    console.log($newquest, 'new quest')
     gPrevQuest[gLastRes] = $newquest;
     $newquest.yes = $guess;
     gCurrQuest = $newquest;
-    // TODO: connect the 2 Quests to the quetsions tree    
     restartGame();
 }
 
@@ -83,9 +80,10 @@ function restartGame() {
     gPrevQuest = null;
     gLastRes = null;
 }
-function updateStorageTree(){
-    localStorage.setItem('QuestsTree',JSON.stringify(gQuestsTree));
- }
- function getStorageTree(){
+
+function updateStorageTree() {
+    localStorage.setItem('QuestsTree', JSON.stringify(gQuestsTree));
+}
+function getStorageTree() {
     return JSON.parse(localStorage.getItem('QuestsTree'));
- }
+}
